@@ -1,0 +1,375 @@
+<!doctype html>
+{% load staticfiles %}
+<html>
+<head>
+<meta charset="utf-8">
+<title>我的个人博客</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+
+<style>
+@charset "utf-8";
+/* 共用css */
+* { margin: 0; padding: 0 }
+body { font: 12px/1.5 'Microsoft Yahei', 'Simsun'; color: #666666; background: #fff }
+img { border: 0; display: block }
+ul { list-style: none; }
+h1, h2, h3, h4, h5, h6 { font-size: 100%; font-weight: normal; }
+a { outline: none; }
+a:link, a:visited { text-decoration: none; color: #666 }
+a:hover { text-decoration: none; }
+.clear { clear: both; }
+.blank { height: 5px; overflow: hidden; width: 100%; margin: auto; clear: both }
+.f_l { float: left }
+.f_r { float: right }
+.l_box { width: 670px; }
+.r_box { width: 300px; }
+/* 头部信息 */
+header { width: 1000px; margin: 20px auto; overflow: hidden; clear: both; }
+#topnav { width: 60%; background: #48AE15; height: 46px; line-height: 46px; text-align: center; border-radius: 46px; }
+#topnav a { display: inline-block; font-size: 18px; font-family: "Microsoft Yahei", Arial, Helvetica, sans-serif; padding: 0 20px; }
+#topnav a:hover { background: #fff; color: #000; }
+#topnav a { color: #FFF }
+#topnav_current { background: #F3FF41; }/* 高亮选中颜色 */
+a#topnav_current { color: #000 }
+article { width: 1000px; margin: 20px auto; }
+/*footer*/
+footer { background: #333; width: 100%; clear: both; text-align: center; }
+.ft-copyright { color: #fff; line-height: 24px; }
+.ft-list { background: url(/static/ft-wx-s.png) no-repeat right; height: 100px }
+/*返回顶部*/
+*html { background-image: url(about:blank); background-attachment: fixed; }/*解决IE6下滚动抖动的问题*/
+#tbox { width: 54px; float: right; position: fixed; right: 50px; bottom: 15px; _position: absolute; _bottom: auto; _top:expression(eval(document.documentElement.scrollTop+document.documentElement.clientHeight-this.offsetHeight-(parseInt(this.currentStyle.marginTop, 10)||0)-(parseInt(this.currentStyle.marginBottom, 10)||0)));
+_margin-bottom: 15px; }/*解决IE6下不兼容 position:fixed 的问题*/
+#togbook, #gotop { width: 54px; height: 56px; display: block; background: url(/static/icons.png) no-repeat #111; box-shadow: 0px 1px 0px rgba(255,255,255,.1), inset 0px 1px 1px rgba(0,0,0,.7); border-radius: 6px; }
+#togbook { margin: 5px 0; background-position: 10px -36px; }
+#gotop { background-position: 12px 10px; }
+#togbook:hover, #gotop:hover { opacity: 0.5 }
+/*标签云*/
+.cloud { width: 100%; clear: both; overflow: hidden }
+.cloud h3 { line-height: 40px; color: #38485A; font-size: 18px; border-bottom: 1px solid #E6E6E6; height: 40px; }
+.cloud ul { margin: 20px 0 }
+.cloud ul li { line-height: 24px; height: 24px; display: block; background: #999; float: left; padding: 3px 11px; margin: 10px 10px 0 0; border-radius: 8px; -moz-transition: all 0.5s; -webkit-transition: all 0.5s; -o-transition: all 0.5s; transition: all 0.5s; }
+.cloud ul li a { color: #FFF }
+.cloud ul li:nth-child(8n-7) { background: #8A9B0F }
+.cloud ul li:nth-child(8n-6) { background: #EB6841 }
+.cloud ul li:nth-child(8n-5) { background: #3FB8AF }
+.cloud ul li:nth-child(8n-4) { background: #FE4365 }
+.cloud ul li:nth-child(8n-3) { background: #FC9D9A }
+.cloud ul li:nth-child(8n-2) { background: #EDC951 }
+.cloud ul li:nth-child(8n-1) { background: #C8C8A9 }
+.cloud ul li:nth-child(8n) { background: #83AF9B }
+.cloud ul li:first-child { background: #036564 }
+.cloud ul li:last-child { background: #3299BB }
+.cloud ul li:hover { border-radius: 0; text-shadow: #000 1px 1px 1px }
+/* 切换卡 */
+.moreSelect { width: 100%; margin: 30px 0 20px 0; overflow: hidden }
+.ms-top { height: 32px; border-bottom: solid 1px #EAEAEA; font-size: 14px }
+#tab li a { float: left; height: 32px; cursor: pointer; line-height: 32px; list-style-type: none; padding: 0 15px; }
+#tab li.cur a { color: #fff; background: #f77825; }
+.bd { display: none }
+.bd-news ul { padding: 10px 0 0 10px; background: url(/static/ph2.png) no-repeat 10px 29px; }
+.bd-news ul li { border-bottom: solid 1px #EAEAEA; line-height: 30px; height: 30px; overflow: hidden; font-size: 14px; padding: 10px 0 0 30px; }
+.bd-news ul li a { display: block; }
+.bd-news ul li a:hover { color: #000; }
+.bd-news ul li:hover { border-bottom: #000 1px solid; }/* 鼠标放上去的效果 */
+}
+</style>
+<style>
+@charset "utf-8";
+/* 幻灯片 */
+.banner { height : 280px; width : 670px; overflow : hidden; }
+#slide-runner { height : 280px; width : 670px; overflow : hidden; position : absolute; }
+#slide-holder img { position : absolute; }
+#slide-controls { left : 0; bottom : 0px; width : 670px; height : 34px; display : none; position : absolute; background : url(/static/slide-bg.png) 0 0; }
+#slide-controls p.text { float : left; color : #fff; display : inline; line-height : 16px; margin : 10px 0 0 20px; }
+#slide-controls p#slide-nav { float : right; height : 24px; display : inline; margin : 5px 0px 0 0; }
+#slide-controls p#slide-nav a { float : left; width : 24px; height : 24px; display : inline; font-size : 11px; margin : 0 5px 0 0; line-height : 24px; text-align : center; color: #fff }
+#slide-controls p#slide-nav a.on { background-position : 0 -24px; }
+#slide-controls p#slide-nav a { background-image : url(/static/silde-nav.png); }
+/*左文章列表*/
+.topnews { margin: 20px 0; }
+.topnews h2 { font-size: 16px; font-weight: bold; line-height: 36px; color: #333; border-bottom: #db6d4c 4px solid; }
+.topnews h2 b { }
+.topnews h2 span { float: right; font-size: 12px; font-weight: normal; }
+.topnews h2 span a { display: inline-block; padding: 0 5px; }
+.topnews h2 span a:hover { color: #000 }
+.blogs { padding: 30px 0; position: relative; border-bottom: #CCC 1px solid; overflow: hidden }
+.blogs h3 { font-size: 16px; font-weight: bold; transition: all .5s; margin-bottom: 10px }
+.blogs h3 a { color: #474645; }
+.blogs h3 a:hover { color: #066; text-decoration: underline }
+.blogs figure { float: left; width: 25%; overflow: hidden; }
+.blogs figure img { width: 100%; margin: auto; -moz-transition: all 0.5s; -webkit-transition: all 0.5s; -o-transition: all 0.5s; transition: all 0.5s; }
+.blogs figure:hover img { -moz-transform: scale(1.1); -webkit-transform: scale(1.1); -o-transform: scale(1.1); -ms-transform: scale(1.1); }
+.blogs ul { float: right; line-height: 22px; width: 72%; color: #756F71;}
+.autor { overflow: hidden; clear: both; margin: 10px 0; display: inline-block; color: #838383; width: 100%;  }
+.autor span { margin: 0 10px 0 0; padding-left: 20px }
+.autor span a { color: #759b08; }
+.autor span a:hover { text-decoration: underline }
+.lm { background: url(/static/newsbg01.png) no-repeat left center }
+.dtime { background: url(/static/newsbg02.png) no-repeat left center }
+.viewnum { background: url(/static/newsbg04.png) no-repeat left center }
+.pingl { background: url(/static/newsbg03.png) no-repeat left center }
+.tit01 h3 { line-height: 40px; color: #38485A; font-size: 18px; border-bottom: 1px solid #E6E6E6; height: 40px }
+/* 关注我样式 */
+.gzwm ul { width: 100%; margin: 30px 0; overflow: hidden }
+.gzwm li { width: 52px; margin: 0 18px 0 5px; float: left; }
+.gzwm li a { color: #747F8C; width: 52px; text-align: center; padding-top: 60px; float: left; }
+.gzwm .rss { background: url(/static/ico_04_1.jpg) no-repeat scroll 0% 0% transparent; }
+.gzwm .rss:hover { color: #000; background: url(/static/ico_04.png) no-repeat scroll 0% 0% transparent; }
+.gzwm .xlwb { background: url(/static/ico_05_1.jpg) no-repeat scroll 0% 0% transparent; }
+.gzwm .xlwb:hover { color: #000; background: url(/static/ico_05.png) no-repeat scroll 0% 0% transparent; }
+.gzwm .txwb { background: url(/static/ico_06_1.jpg) no-repeat scroll 0% 0% transparent; }
+.gzwm .txwb:hover { color: #000; background: url(/static/ico_06.png) no-repeat scroll 0% 0% transparent; }
+.gzwm .wx { background: url(/static/ico_07_1.jpg) no-repeat scroll 0% 0% transparent; }
+.gzwm .wx:hover { color: #000; background: url(/static/ico_07.png) no-repeat scroll 0% 0% transparent; }
+/*图文列表*/
+.tuwen { width: 100%; clear: both; overflow: hidden; margin: 20px 0 }
+.tuwen h3 { line-height: 40px; color: #38485A; font-size: 18px; border-bottom: 1px solid #E6E6E6; height: 40px; margin-bottom: 30px }
+.tuwen li { overflow: hidden; clear: both; margin-bottom: 10px }
+.tuwen li img { width: 70px; float: left; margin-right: 15px }
+.tuwen li b { overflow: hidden; width: 100%; font-weight: normal; color: #333; font-size: 14px; line-height: 30px }
+.tuwen li a b:hover { text-decoration: underline; color: #F60 }
+.tuwen li span { color: #999; margin-right: 10px }
+.tuwen p { margin-top: 5px }
+.tulanmu { background: url(/static/lanmbq.png) no-repeat center left; padding-left: 17px }
+.tulanmu a { color: #999; }
+.tulanmu a:hover { color: #066 }
+.tutime { background: url(/static/datepng.png) no-repeat left center; padding-left: 15px }
+.tuwen li:hover { background: #f4f3f3 }
+/*首页右侧广告 300*/
+.ad { width: 300px; overflow: hidden; margin: 30px 0 }
+.ad img { width: 300px; }
+/*友情链接*/
+.links { width: 100%; overflow: hidden; clear: both }
+.links h3 { line-height: 40px; color: #38485A; font-size: 18px; border-bottom: 1px solid #E6E6E6; height: 40px; margin-bottom: 20px }
+.links h3 span { float: right; font-size: 12px; }
+.links h3 span a { color: #999; padding: 0 5px }
+.links h3 span a:hover { color: #F60; text-decoration: underline }
+.links ul { background: #f9f9f9; padding: 10px; overflow: hidden; border: #e9e9e9 1px solid }
+.links ul li { float: left; padding: 5px 8px }
+.links ul li a:hover { color: #000 }
+
+</style>
+
+<script type="text/javascript" src="/static/js/jquery.min.js"></script>
+<script type="text/javascript" src="/static/js/sliders.js"></script>
+<!--[if lt IE 9]>
+<script src="js/modernizr.js"></script>
+<![endif]-->
+<!-- 返回顶部调用 begin -->
+<script type="text/javascript" src="/static/js/jquery.js"></script>
+<script type="text/javascript" src="/static/js/js.js"></script>
+<!-- 返回顶部调用 end-->
+</head>
+<body>
+<header>
+  <div class="logo f_l"> <a href="#"><img src="/static/images/logo.png"></a> </div>
+  <nav id="topnav" class="f_r">
+    <ul>
+      <a href="../index" target="_blank">首页</a> <a href="../about" target="_blank">关于我</a> <a href="../pages" target="_blank">文章</a> <a href="../xinqing" target="_blank">心情</a> <a href="../photoall" target="_blank">相册</a> <a href="../liuyan" target="_blank">留言</a>
+    </ul>
+    <script src="/static/js/nav.js"></script> 
+  </nav>
+</header>
+<article>
+  <div class="l_box f_l">
+    <div class="banner">
+      <div id="slide-holder">
+        <div id="slide-runner"> 
+		
+		    {% block contenttj %}
+	        {% for tjpost in tjposts %}
+			<a href="/blog/page/?id={{ tjpost.id }}" target="_blank"><img id="slide-img-1" src="/static/images/a1.jpg"  alt="" /></a> 
+            
+			{% endfor %}
+            {% endblock %}
+		
+          <div id="slide-controls">
+            <p id="slide-client" class="text"><strong></strong><span></span></p>
+            <p id="slide-desc" class="text"></p>
+            <p id="slide-nav"></p>
+          </div>
+        </div>
+      </div>
+      <script>
+	  if(!window.slider) {
+		var slider={};
+	}
+
+	slider.data= [
+    {
+        "id":"slide-img-1", // 与slide-runner中的img标签id对应
+        "client":"标题1",
+        "desc":"这里修改描述 这里修改描述 这里修改描述" //这里修改描述
+    },
+    {
+        "id":"slide-img-2",
+        "client":"标题2",
+        "desc":"add your description here"
+    },
+    {
+        "id":"slide-img-3",
+        "client":"标题3",
+        "desc":"add your description here"
+    },
+    {
+        "id":"slide-img-4",
+        "client":"标题4",
+        "desc":"add your description here"
+    } 
+	];
+
+	  </script> 
+    </div>
+    <!-- banner代码 结束 -->
+	
+	
+	
+	
+    <div class="topnews">
+	
+      <h2><span>{% block catscontent %} {% for cat in cats %}<a href="/blog/catpages/?id={{ cat.id }}" target="_blank">{{ cat.name }}</a> {% endfor %} {% endblock %}</span><b>最新</b>博文</h2>
+     
+	{% block content %}
+	{% for post in newposts %}
+	
+	  <div class="blogs">
+        <figure><img src="/static/images/01.jpg"></figure>
+        <ul>
+          <h3><a href="/blog/page/?id={{ post.id }}" >{{  post.title }}</a></h3>
+          <p></p>
+          <p class="autor"><span class="lm f_l"><a href="/">{{ post.po_type }}</a></span><span class="dtime f_l">{{ post.pub_data}}</span><span class="viewnum f_r">浏览（<a href="/blog/page/?id={{ post.id }}">{{ post.click_times}}</a>）</span><span class="pingl f_r">评论（<a href="/blog/page/?id={{ post.id }}">{{ post.comment_times}} </a>）</span></p>
+        </ul>
+      </div>
+      
+	
+{% endfor %}
+{% endblock %}
+	</div>
+  </div>
+  <div class="r_box f_r">
+    <div class="tit01">
+      <h3>关注我</h3>
+      <div class="gzwm">
+        <ul>
+          <li><a class="xlwb" href="#" target="_blank">新浪微博</a></li>
+          <li><a class="txwb" href="#" target="_blank">腾讯微博</a></li>
+          <li><a class="rss" href="portal.php?mod=rss" target="_blank">RSS</a></li>
+          <li><a class="wx" href="mailto:admin@admin.com">邮箱</a></li>
+        </ul>
+      </div>
+    </div>
+    <!--tit01 end-->
+    <div class="ad300x100"> <img src="/static/images/ad300x100.jpg"> </div>
+    <div class="moreSelect" id="lp_right_select"> 
+      <script>
+window.onload = function ()
+{
+	var oLi = document.getElementById("tab").getElementsByTagName("li");
+	var oUl = document.getElementById("ms-main").getElementsByTagName("div");
+	
+	for(var i = 0; i < oLi.length; i++)
+	{
+		oLi[i].index = i;
+		oLi[i].onmouseover = function ()
+		{
+			for(var n = 0; n < oLi.length; n++) oLi[n].className="";
+			this.className = "cur";
+			for(var n = 0; n < oUl.length; n++) oUl[n].style.display = "none";
+			oUl[this.index].style.display = "block"
+		}	
+	}
+}
+</script>
+      <div class="ms-top">
+        <ul class="hd" id="tab">
+          <li class="cur"><a href="../clickm">点击排行</a></li>
+          <li><a href="../news">最新文章</a></li>
+          <li><a href="../tjpages">站长推荐</a></li>
+        </ul>
+      </div>
+      <div class="ms-main" id="ms-main">
+        <div style="display: block;" class="bd bd-news" >
+         <ul>
+            {% block contentclick %}
+	        {% for post in mostclickposts %}
+            <li><a href="/blog/page/?id={{ post.id }}" >{{  post.title }}</a></li>
+			{% endfor %}
+            {% endblock %}
+          </ul>
+        </div>
+        <div  class="bd bd-news">
+           <ul>
+            {% block contentnew %}
+	        {% for post in newposts %}
+            <li><a href="/blog/page/?id={{ post.id }}" >{{  post.title }}</a></li>
+			{% endfor %}
+            {% endblock %}
+          </ul>
+        </div>
+        <div class="bd bd-news">
+          <ul>
+           {% block contenttzj %}
+	        {% for tjpost in tjposts %} 
+             <li><a href="/blog/page/?id={{ tjpost.id }}" target="_blank"> {{tjpost.title}} </a></li>
+			{% endfor %}
+            {% endblock %}
+          </ul>
+        </div>
+      </div>
+      <!--ms-main end --> 
+    </div>
+    <!--切换卡 moreSelect end -->
+    
+    <div class="cloud">
+      <h3>标签云</h3>
+       <ul>
+            {% block contentcats %}
+	        {% for cat in cats %}
+            <li><a href="/blog/catpages/?id={{ cat.id }}" >{{  cat.name }}</a></li>
+			{% endfor %}
+            {% endblock %}
+        </ul>
+    </div>
+    <div class="tuwen">
+      <h3>图文推荐</h3>
+      <ul>
+        <li><a href="#"><img src="/static/images/01.jpg"><b>住在手机里的朋友</b></a>
+          <p><span class="tulanmu"><a href="/">手机配件</a></span><span class="tutime">2015-02-15</span></p>
+        </li>
+        <li><a href="#"><img src="/static/images/02.jpg"><b>教你怎样用欠费手机拨打电话</b></a>
+          <p><span class="tulanmu"><a href="/">手机配件</a></span><span class="tutime">2015-02-15</span></p>
+        </li>
+        <li><a href="#" title="手机的16个惊人小秘密，据说99.999%的人都不知"><img src="/static/images/03.jpg"><b>手机的16个惊人小秘密，据说...</b></a>
+          <p><span class="tulanmu"><a href="/">手机配件</a></span><span class="tutime">2015-02-15</span></p>
+        </li>
+        <li><a href="#"><img src="/static/images/06.jpg"><b>住在手机里的朋友</b></a>
+          <p><span class="tulanmu"><a href="/">手机配件</a></span><span class="tutime">2015-02-15</span></p>
+        </li>
+        <li><a href="#"><img src="/static/images/04.jpg"><b>教你怎样用欠费手机拨打电话</b></a>
+          <p><span class="tulanmu"><a href="/">手机配件</a></span><span class="tutime">2015-02-15</span></p>
+        </li>
+      </ul>
+    </div>
+    <div class="ad"> <img src="/static/images/03.jpg"> </div>
+    <div class="links">
+      <h3><span>[<a href="/blog/addlink">申请友情链接</a>]</span>友情链接</h3>
+      <ul>
+        
+            {% block contentlink %}
+	        {% for link in links %}
+            <li><a href="{{ link.url }}" >{{ link.name }}</a></li>
+			{% endfor %}
+            {% endblock %}
+      </ul>
+    </div>
+  </div>
+  <!--r_box end --> 
+</article>
+<footer>
+  <p class="ft-copyright">兔小白博客 Design by DanceSmile 蜀ICP备11002373号-1</p>
+  <div id="tbox"> <a id="togbook" href="/"></a> <a id="gotop" href="javascript:void(0)"></a> </div>
+</footer>
+</body>
+</html>
