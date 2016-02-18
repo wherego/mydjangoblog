@@ -19,7 +19,7 @@ tjposts=Post.objects.filter(istj=1)
 links=Links.objects.all()
 cats=Category.objects.all()
 posts = Post.objects.all()
-newposts=Post.objects.order_by("pub_data")
+newposts=Post.objects.order_by("-pub_data")
 mostclickposts=Post.objects.order_by("-click_times")
 
 
@@ -76,14 +76,14 @@ def catpages(request):
 def addcomment(request):
     postid = request.GET.get('id')
     id=request.GET['id']
-    usrname=request.GET['usrname']
+    username=request.GET['username']
     email=request.GET['email']
     content=request.GET['content']
     psw=request.GET['psw']	
     t = loader.get_template("addcommentresult.html")
-    if psw=="123456":
+    if (psw=="123456" and username!="" and email!="" and content!=""):
 		comment=Comment()
-		comment.user=usrname
+		comment.user=username
 		comment.content=content
 		comment.email=email
 		post=Post.objects.get(id=postid)
@@ -95,7 +95,7 @@ def addcomment(request):
 			
     else:
         result="评论添加不成功 请联系站长"	
-    c = Context({"usrname":usrname,"result":result,"postid":postid,"id":id})
+    c = Context({"username":username,"result":result,"postid":postid,"id":id})
     return HttpResponse(t.render(c))
        
 
@@ -130,12 +130,12 @@ def addlink(request):
 
 	
 def addlinktj(request):
-    usrname=request.GET['usrname']
+    username=request.GET['username']
     name=request.GET['name']
     link=request.GET['link']
     psw=request.GET['psw']	
     t = loader.get_template("addlinkresult.html")
-    if psw=="123456":
+    if (psw=="123456" and username!="" and name!="" and link!=""):
         linkall=Links()
         linkall.name=name
         linkall.url=link
@@ -143,7 +143,7 @@ def addlinktj(request):
         result="连接添加成功"
     else:
         result="链接添加不成功 请联系站长"	
-    c = Context({"usrname":usrname,"result":result})
+    c = Context({"username":username,"result":result})
     return HttpResponse(t.render(c))
 	
 def liuyan(request):
@@ -153,20 +153,20 @@ def liuyan(request):
     return HttpResponse(t.render(c))	
 	
 def liuyantj(request):
-    name=request.GET['usrname']
+    name=request.GET['username']
     title=request.GET['title']
     content=request.GET['content']
     email=request.GET['email']
     result="添加留言成功"
-    if name!="":
-        liuyanall=LiuYan()
-        liuyanall.name=name
-        liuyanall.email=email
-        liuyanall.liuyantitle=title
-        liuyanall.liuyan=content
-        liuyanall.save()
-    else:
-        result="添加留言不成功"
+    if (name!="" and title!="" and content!="" and email!=""):
+            liuyanall=LiuYan()
+            liuyanall.name=name
+            liuyanall.email=email
+            liuyanall.liuyantitle=title
+            liuyanall.liuyan=content
+            liuyanall.save()           		
+    else:    
+	    result="添加留言不成功"
     t = loader.get_template("sucess.html")
     c = Context({"result":result})
     return HttpResponse(t.render(c))

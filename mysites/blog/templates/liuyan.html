@@ -152,6 +152,26 @@ _margin-bottom: 15px; }/*解决IE6下不兼容 position:fixed 的问题*/
 
 </style>
 
+<style>
+form div { margin:5px 0;}
+.int label { float:left; width:100px; text-align:right;}
+.int input { padding:1px 1px; border:1px solid #ccc;height:16px;}
+.sub { padding-left:100px;}
+.sub input { margin-right:10px; }
+.formtips{width: 200px;margin:2px;padding:2px;}
+.onError{
+    background:#FFE0E9 url(/static/reg3.gif) no-repeat 0 center;
+	padding-left:25px;
+}
+.onSuccess{
+    background:#E9FBEB url(/static/reg4.gif) no-repeat 0 center;
+	padding-left:25px;
+}
+.high{
+    color:red;
+}
+</style>
+
 <script type="text/javascript" src="/static/js/jquery.min.js"></script>
 <script type="text/javascript" src="/static/js/sliders.js"></script>
 <!--[if lt IE 9]>
@@ -161,6 +181,83 @@ _margin-bottom: 15px; }/*解决IE6下不兼容 position:fixed 的问题*/
 <script type="text/javascript" src="/static/js/jquery.js"></script>
 <script type="text/javascript" src="/static/js/js.js"></script>
 <!-- 返回顶部调用 end-->
+
+
+ <script type="text/javascript">
+//<![CDATA[
+$(function(){
+		//如果是必填的，则加红星标识.
+		$("form :input.required").each(function(){
+			var $required = $("<strong class='high'> *</strong>"); //创建元素
+			$(this).parent().append($required); //然后将它追加到文档中
+		});
+		 //文本框失去焦点后
+		$('form :input').blur(function(){  // 为表单元素添加失去焦点事件
+			 var $parent = $(this).parent();
+			 //验证用户名
+			 if( $(this).is('#username') ){
+					if( this.value=="" || this.value.length	< 6	){
+						var errorMsg = '请输入至少6位的用户名.';
+						$parent.append('<span class="formtips onError">'+errorMsg+'</span>');
+						alert("请输入至少6位的用户名.");
+					}else{
+						var okMsg =	'输入正确.';
+						$parent.append('<span class="formtips onSuccess">'+okMsg+'</span>');
+					}
+			 }
+			 //验证标题
+			 if( $(this).is('#title') ){
+					if( this.value=="" || this.value.length	< 4	){
+						var errorMsg = '请输入至少4位标题.';
+						$parent.append('<span class="formtips onError">'+errorMsg+'</span>');
+						alert("请输入至少4位标题.");
+					}else{
+						var okMsg =	'输入正确.';
+						$parent.append('<span class="formtips onSuccess">'+okMsg+'</span>');
+					}
+			 }
+			 
+			 //验证内容
+			 if( $(this).is('#content') ){
+					if( this.value=="" || this.value.length	< 20	){
+						var errorMsg = '请输入至少20个字符的留言内容.';
+						$parent.append('<span class="formtips onError">'+errorMsg+'</span>');
+						
+					}else{
+						var okMsg =	'输入正确.';
+						$parent.append('<span class="formtips onSuccess">'+okMsg+'</span>');
+					}
+			 }
+			 
+			 //验证验证码
+			 if( $(this).is('#code') ){
+					if( this.value=="" || this.value.length	!=4	){
+						var errorMsg = '请输入4位验证码.';
+						$parent.append('<span class="formtips onError">'+errorMsg+'</span>');
+						alert("请输入4位验证码.");
+					}else{
+						var okMsg =	'输入正确.';
+						$parent.append('<span class="formtips onSuccess">'+okMsg+'</span>');
+					}
+			 }
+			 //验证邮件
+			 if( $(this).is('#email') ){
+				if( this.value=="" || ( this.value!="" && !/.+@.+\.[a-zA-Z]{2,4}$/.test(this.value) ) ){
+					  var errorMsg = '请输入正确的E-Mail地址.';
+					  $parent.append('<span class="formtips onError">'+errorMsg+'</span>');
+					  alert("请输入正确的E-Mail地址.");
+				}else{
+					  var okMsg = '输入正确.';
+					  $parent.append('<span class="formtips onSuccess">'+okMsg+'</span>');
+				}
+			 }
+		})
+})
+//]]>
+</script>
+
+  
+
 </head>
 <body>
 <header>
@@ -247,47 +344,40 @@ _margin-bottom: 15px; }/*解决IE6下不兼容 position:fixed 的问题*/
    {% endblock %}
    
    
-  <script type="text/javascript">
-  
-function validate(){
-   if(document.form.usrname.value.length=0){
-   alert("请输入用户名");
-   return false;
-   }  
 
-   if(document.form.title.value.length=0){
-     alert("请输入留言标题");
-     return false;
-     }
-	 
-	 if(document.form.content.value.length=0){
-   alert("请输入留言内容");
-   return false;
-   }
-   
-   if(document.form.email.value.length=0){
-   alert("请输入联系邮箱");
-   return false;
-   }
-   
-   return true;
-   }
-   
-  </script>
    
    </br></br></br></br>
     <div class="liuyan">
-	  <form  action="/blog/liuyantj" method="GET" onSubmit="validate();">
-	       用户名：  <input type="text"  name="usrname"></br></br>
-	     留言标题：  <input type="text"  name="title"></br></br></br>
-		 留言内容：</br></br>
-		<textarea name="content" cols=80 rows=20>
+<form method="get" action="/blog/liuyantj/">
+	<div class="int">
+		<label for="usrname">用户名:</label>
+		<input type="text" id="username" name="username" class="required" />
+	</div>
+	<div class="int">
+		<label for="email">联系邮箱:</label>
+		<input type="text" id="email" name="email" class="required" />
+	</div>
+	<div class="int">
+		<label for="title">留言标题:</label>
+		<input type="text" id="title"  name="title"class="required" />
+	</div>
+	<div class="int">
+		<label for="content">留言内容:</label>
+		<textarea id="content" name="content" class="required" cols=80 rows=20>
                       请输入留言内容
                        </textarea></br>
-		联系邮箱：	 <input type="text"  name="email"></br></br>
-		验证码： <input type="text"  name="psw"></br></br>    
-	         <input type="submit"  value="留言"></br>
-	  </form>
+                      
+	</div>
+	<div class="int">
+		<label for="code">验证码:</label>
+		<input type="text" id="code" class="required"/>
+	</div>
+	<div class="sub">
+		<input type="submit" value="提交" id="send"/><input type="reset" id="res"/>
+	</div>
+	
+	
+</form>
 	</div>
    
    

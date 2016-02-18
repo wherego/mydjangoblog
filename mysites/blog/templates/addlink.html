@@ -152,6 +152,26 @@ _margin-bottom: 15px; }/*解决IE6下不兼容 position:fixed 的问题*/
 
 </style>
 
+<style>
+form div { margin:5px 0;}
+.int label { float:left; width:100px; text-align:right;}
+.int input { padding:1px 1px; border:1px solid #ccc;height:16px;}
+.sub { padding-left:100px;}
+.sub input { margin-right:10px; }
+.formtips{width: 200px;margin:2px;padding:2px;}
+.onError{
+    background:#FFE0E9 url(/static/reg3.gif) no-repeat 0 center;
+	padding-left:25px;
+}
+.onSuccess{
+    background:#E9FBEB url(/static/reg4.gif) no-repeat 0 center;
+	padding-left:25px;
+}
+.high{
+    color:red;
+}
+</style>
+
 <script type="text/javascript" src="/static/js/jquery.min.js"></script>
 <script type="text/javascript" src="/static/js/sliders.js"></script>
 <!--[if lt IE 9]>
@@ -161,6 +181,72 @@ _margin-bottom: 15px; }/*解决IE6下不兼容 position:fixed 的问题*/
 <script type="text/javascript" src="/static/js/jquery.js"></script>
 <script type="text/javascript" src="/static/js/js.js"></script>
 <!-- 返回顶部调用 end-->
+
+
+ <script type="text/javascript">
+//<![CDATA[
+$(function(){
+		//如果是必填的，则加红星标识.
+		$("form :input.required").each(function(){
+			var $required = $("<strong class='high'> *</strong>"); //创建元素
+			$(this).parent().append($required); //然后将它追加到文档中
+		});
+		 //文本框失去焦点后
+		$('form :input').blur(function(){  // 为表单元素添加失去焦点事件
+			 var $parent = $(this).parent();
+			 //验证用户名
+			 if( $(this).is('#username') ){
+					if( this.value=="" || this.value.length	< 6	){
+						var errorMsg = '请输入至少6位的用户名.';
+						$parent.append('<span class="formtips onError">'+errorMsg+'</span>');
+						alert("请输入至少6位的用户名.");
+					}else{
+						var okMsg =	'输入正确.';
+						$parent.append('<span class="formtips onSuccess">'+okMsg+'</span>');
+					}
+			 }
+			 //验证网站
+			 if( $(this).is('#name') ){
+					if( this.value=="" || this.value.length	> 20	){
+						var errorMsg = '请输入小于20位网站.';
+						$parent.append('<span class="formtips onError">'+errorMsg+'</span>');
+						alert("请输入至少4位标题.");
+					}else{
+						var okMsg =	'输入正确.';
+						$parent.append('<span class="formtips onSuccess">'+okMsg+'</span>');
+					}
+			 }
+			 
+			 //验证网址
+			 if( $(this).is('#link') ){
+					if( this.value=="" 	){
+						var errorMsg = '请输入正确的网址.';
+						$parent.append('<span class="formtips onError">'+errorMsg+'</span>');
+						
+					}else{
+						var okMsg =	'输入正确.';
+						$parent.append('<span class="formtips onSuccess">'+okMsg+'</span>');
+					}
+			 }
+			 
+			 //验证验证码
+			 if( $(this).is('#code') ){
+					if( this.value=="" || this.value.length	!=6	){
+						var errorMsg = '请输入4位密码.';
+						$parent.append('<span class="formtips onError">'+errorMsg+'</span>');
+						alert("请输入6位密码.");
+					}else{
+						var okMsg =	'输入正确.';
+						$parent.append('<span class="formtips onSuccess">'+okMsg+'</span>');
+					}
+			 }
+			
+		})
+})
+//]]>
+</script>
+
+
 </head>
 <body>
 <header>
@@ -232,18 +318,37 @@ _margin-bottom: 15px; }/*解决IE6下不兼容 position:fixed 的问题*/
        <h2><span>{% block catscontent %} {% for cat in cats %}<a href="/blog/catpages/?id={{ cat.id }}" target="_blank">{{ cat.name }}</a> {% endfor %} {% endblock %}</span><b>申请</b>友情链接</h2>
      
    
-   </br></br></br></br>
-    <div class="liuyan">
-	  <form  action="/blog/addlinktj" method="get">
-	      用户名：  <input type="text"  name="usrname"></br></br>
-	     网站名：  <input type="text"  name="name"></br></br></br>
-		链接URL：  <input type="text"  name="link"></br></br></br>
-		密码：	 <input type="text"  name="psw"></br></br>
-	         <input type="submit"  value="提交"></br>
-	  </form>
+   
+   
+   
+   
+	
+	 <div class="liuyan">
+	
+	<form method="get" action="/blog/addlinktj/">
+	<div class="int">
+		<label for="username">用户名:</label>
+		<input type="text" id="username" name="username" class="required">
 	</div>
-   
-   
+	<div class="int">
+		<label for="name">网站名：</label>
+     <input type="text" id="name" name="name" class="required">
+	</div>
+	<div class="int">
+		<label for="link">链接URL：</label>
+	 <input type="text" id="link" name="link" class="required">
+	</div>
+	<div class="int">
+		<label for="code">密码：</label>
+		<input type="text" id="code" name="psw" class="required">
+	</div>
+	
+	<div class="sub">
+		<input type="submit" value="提交" id="send"/><input type="reset" id="res"/>
+	</div>
+	
+	</form>
+	</div>
 	</div>
   </div>
   <div class="r_box f_r">
