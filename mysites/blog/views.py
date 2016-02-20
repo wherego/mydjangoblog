@@ -75,11 +75,11 @@ def catpages(request):
 
 def addcomment(request):
     postid = request.GET.get('id')
-    id=request.GET['id']
-    username=request.GET['username']
-    email=request.GET['email']
-    content=request.GET['content']
-    psw=request.GET['psw']	
+    id=request.POST['id']
+    username=request.POST['username']
+    email=request.POST['email']
+    content=request.POST['content']
+    psw=request.POST['psw']	
     t = loader.get_template("addcommentresult.html")
     if (psw=="123456" and username!="" and email!="" and content!=""):
 		comment=Comment()
@@ -104,10 +104,10 @@ def addcomment(request):
 	
 def addphotocomment(request):
     photoid = request.GET.get('id')
-    usrname=request.GET['usrname']
-    email=request.GET['email']
-    content=request.GET['content']
-    psw=request.GET['psw']	
+    usrname=request.POST['usrname']
+    email=request.POST['email']
+    content=request.POST['content']
+    psw=request.POST['psw']	
     t = loader.get_template("addcommentresult.html")
     if psw=="123456":
         comment=PhotoComment()
@@ -130,10 +130,10 @@ def addlink(request):
 
 	
 def addlinktj(request):
-    username=request.GET['username']
-    name=request.GET['name']
-    link=request.GET['link']
-    psw=request.GET['psw']	
+    username=request.POST['username']
+    name=request.POST['name']
+    link=request.POST['link']
+    psw=request.POST['psw']	
     t = loader.get_template("addlinkresult.html")
     if (psw=="123456" and username!="" and name!="" and link!=""):
         linkall=Links()
@@ -153,10 +153,10 @@ def liuyan(request):
     return HttpResponse(t.render(c))	
 	
 def liuyantj(request):
-    name=request.GET['username']
-    title=request.GET['title']
-    content=request.GET['content']
-    email=request.GET['email']
+    name=request.POST['username']
+    title=request.POST['title']
+    content=request.POST['content']
+    email=request.POST['email']
     result="添加留言成功"
     if (name!="" and title!="" and content!="" and email!=""):
             liuyanall=LiuYan()
